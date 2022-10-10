@@ -1567,6 +1567,11 @@ class BaseModelSqlv2 {
                 .select(ai.column_name)
                 .max(ai.column_name, { as: 'id' })
             )[0].id;
+          } else if (this.isSnowflake) {
+            id = ((
+              await this.dbDriver(this.tnPath)
+                .max(ai.column_name, { as: 'id' })
+            ) as any).rows[0].id;
           }
           response = await this.readByPk(id);
         } else {
@@ -1680,9 +1685,11 @@ class BaseModelSqlv2 {
   private getTnPath(tb: Model) {
     const schema = (this.dbDriver as any).searchPath?.();
     const table =
-      this.isMssql && schema
-        ? this.dbDriver.raw('??.??', [schema, tb.table_name])
-        : tb.table_name;
+    this.isMssql && schema
+      ? this.dbDriver.raw('??.??', [schema, tb.table_name])
+      : this.isSnowflake
+      ? this.dbDriver.raw(`"${this.dbDriver.client.config.connection.database}"."${this.dbDriver.client.config.connection.schema}"."${tb.table_name}"`)
+      : tb.table_name;
     return table;
   }
 
@@ -1812,7 +1819,19 @@ class BaseModelSqlv2 {
         }
 
         if (ai) {
-          // response = await this.readByPk(id)
+          if (this.isSqlite) {
+            // sqlite doesnt return id after insert
+            id = (
+              await this.dbDriver(this.tnPath)
+                .select(ai.column_name)
+                .max(ai.column_name, { as: 'id' })
+            )[0].id;
+          } else if (this.isSnowflake) {
+            id = ((
+              await this.dbDriver(this.tnPath)
+                .max(ai.column_name, { as: 'id' })
+            ) as any).rows[0].id;
+          }
           response = await this.readByPk(id);
         } else {
           response = data;
@@ -1885,10 +1904,10 @@ class BaseModelSqlv2 {
       const response =
         this.isPg || this.isMssql
           ? await this.dbDriver
-              .batchInsert(this.model.table_name, insertDatas, chunkSize)
+              .batchInsert(this.tnPath, insertDatas, chunkSize)
               .returning(this.model.primaryKey?.column_name)
           : await this.dbDriver.batchInsert(
-              this.model.table_name,
+              this.tnPath,
               insertDatas,
               chunkSize
             );
@@ -1921,7 +1940,7 @@ class BaseModelSqlv2 {
           continue;
         }
         const wherePk = await this._wherePk(pkValues);
-        const response = await transaction(this.model.table_name)
+        const response = await transaction(this.tnPath)
           .update(d)
           .where(wherePk);
         res.push(response);
@@ -1997,7 +2016,7 @@ class BaseModelSqlv2 {
       const res = [];
       for (const d of ids) {
         if (Object.keys(d).length) {
-          const response = await transaction(this.model.table_name)
+          const response = await transaction(this.tnPath)
             .del()
             .where(d);
           res.push(response);
@@ -2246,7 +2265,7 @@ class BaseModelSqlv2 {
             subject: 'NocoDB Form',
             html: ejs.render(formSubmissionEmailTemplate, {
               data: transformedData,
-              tn: this.model.table_name,
+              tn: this.tnPath,
               _tn: this.model.title,
             }),
           });
@@ -2565,7 +2584,7 @@ class BaseModelSqlv2 {
       } else {
         groupingValues = new Set(
           (
-            await this.dbDriver(this.model.table_name)
+            await this.dbDriver(this.tnPath)
               .select(column.column_name)
               .distinct()
           ).map((row) => row[column.column_name])
@@ -2573,7 +2592,7 @@ class BaseModelSqlv2 {
         groupingValues.add(null);
       }
 
-      const qb = this.dbDriver(this.model.table_name);
+      const qb = this.dbDriver(this.tnPath);
       qb.limit(+rest?.limit || 25);
       qb.offset(+rest?.offset || 0);
 
@@ -2712,7 +2731,7 @@ class BaseModelSqlv2 {
     if (isVirtualCol(column))
       NcError.notImplemented('Grouping for virtual columns not implemented');
 
-    const qb = this.dbDriver(this.model.table_name)
+    const qb = this.dbDriver(this.tnPath)
       .count('*', { as: 'count' })
       .groupBy(column.column_name);
 
