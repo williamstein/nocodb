@@ -477,6 +477,7 @@ provide(IsQuickImportInj, ref(true))
 
       <template v-if="importStepper === IMPORT_STEPS.STEP_2_REVIEW_DATA">
         <a-button key="back" @click="importStepper = IMPORT_STEPS.STEP_1_UPLOAD_DATA"> Back </a-button>
+        <a-button key="next" @click="importStepper = IMPORT_STEPS.STEP_3_LOAD_TO_DATABASE"> Next </a-button>
       </template>
 
       <template v-if="importStepper === IMPORT_STEPS.STEP_3_LOAD_TO_DATABASE">
