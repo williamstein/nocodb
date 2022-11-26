@@ -24,7 +24,7 @@ test.describe('Meta sync', () => {
         dbExec = mysqlExec;
         break;
       case 'pg':
-        dbExec = pgExec;
+        dbExec = query => pgExec(query, context);
         break;
     }
   });
@@ -260,12 +260,14 @@ test.describe('Meta sync', () => {
       isLocallySaved: false,
     });
 
+    await dashboard.grid.toolbar.clickFilter();
     await dashboard.grid.toolbar.filter.addNew({
       columnTitle: 'Col1',
       opType: '>=',
       value: '5',
       isLocallySaved: false,
     });
+    await dashboard.grid.toolbar.clickFilter();
 
     await dashboard.grid.verifyRowCount({ count: 5 });
   });

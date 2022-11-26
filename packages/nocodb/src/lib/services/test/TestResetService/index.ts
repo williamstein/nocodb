@@ -28,6 +28,8 @@ const projectTitleByType = {
 
 export class TestResetService {
   private readonly parallelId;
+  // todo: Hack to resolve issue with pg resetting
+  private readonly workerId;
   private readonly dbType;
   private readonly isEmptyProject: boolean;
 
@@ -35,14 +37,17 @@ export class TestResetService {
     parallelId,
     dbType,
     isEmptyProject,
+    workerId,
   }: {
     parallelId: string;
     dbType: string;
     isEmptyProject: boolean;
+    workerId: string;
   }) {
     this.parallelId = parallelId;
     this.dbType = dbType;
     this.isEmptyProject = isEmptyProject;
+    this.workerId = workerId;
   }
 
   async process() {
@@ -68,6 +73,7 @@ export class TestResetService {
         token,
         dbType: this.dbType,
         parallelId: this.parallelId,
+        workerId: this.workerId,
       });
 
       try {
@@ -90,10 +96,12 @@ export class TestResetService {
     token,
     dbType,
     parallelId,
+    workerId,
   }: {
     token: string;
     dbType: string;
     parallelId: string;
+    workerId: string;
   }) {
     const title = `${projectTitleByType[dbType]}${parallelId}`;
     const project: Project | undefined = await Project.getByTitle(title);
@@ -129,7 +137,7 @@ export class TestResetService {
       await resetPgSakilaProject({
         token,
         title,
-        parallelId,
+        parallelId: workerId,
         oldProject: project,
         isEmptyProject: this.isEmptyProject,
       });

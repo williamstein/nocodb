@@ -121,6 +121,14 @@ if (isKanban.value) {
     }
   }
 }
+
+const cellWrapperEl = ref<HTMLElement>()
+
+onMounted(() => {
+  setTimeout(() => {
+    ;(cellWrapperEl.value?.querySelector('input,select,textarea') as HTMLInputElement)?.focus()
+  })
+})
 </script>
 
 <script lang="ts">
@@ -146,7 +154,7 @@ export default {
         <div class="flex-1 overflow-auto scrollbar-thin-dull nc-form-fields-container">
           <div class="w-[500px] mx-auto">
             <div
-              v-for="col of fields"
+              v-for="(col, i) of fields"
               v-show="!isVirtualCol(col) || !isNew || col.uidt === UITypes.LinkToAnotherRecord"
               :key="col.title"
               class="mt-2 py-2"
@@ -157,7 +165,10 @@ export default {
 
               <LazySmartsheetHeaderCell v-else :column="col" />
 
-              <div class="!bg-white rounded px-1 min-h-[35px] flex items-center mt-2">
+              <div
+                :ref="i ? null : (el) => (cellWrapperEl = el)"
+                class="!bg-white rounded px-1 min-h-[35px] flex items-center mt-2"
+              >
                 <LazySmartsheetVirtualCell v-if="isVirtualCol(col)" v-model="row.row[col.title]" :row="row" :column="col" />
 
                 <LazySmartsheetCell

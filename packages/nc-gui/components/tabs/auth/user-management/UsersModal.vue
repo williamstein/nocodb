@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Input } from 'ant-design-vue'
 import {
   Form,
   computed,
@@ -133,6 +134,10 @@ const clickInviteMore = () => {
   usersData.role = ProjectRole.Viewer
   usersData.emails = undefined
 }
+
+const emailField = (inputEl: typeof Input) => {
+  inputEl?.$el?.focus()
+}
 </script>
 
 <template>
@@ -145,11 +150,16 @@ const clickInviteMore = () => {
     wrap-class-name="nc-modal-invite-user-and-share-base"
     @cancel="emit('closed')"
   >
-    <div class="flex flex-col">
+    <div class="flex flex-col" data-testid="invite-user-and-share-base-modal">
       <div class="flex flex-row justify-between items-center pb-1.5 mb-2 border-b-1 w-full">
         <a-typography-title class="select-none" :level="4"> {{ $t('activity.share') }}: {{ project.title }} </a-typography-title>
 
-        <a-button type="text" class="!rounded-md mr-1 -mt-1.5" @click="emit('closed')">
+        <a-button
+          type="text"
+          class="!rounded-md mr-1 -mt-1.5"
+          data-testid="invite-user-and-share-base-modal-close-btn"
+          @click="emit('closed')"
+        >
           <template #icon>
             <MaterialSymbolsCloseRounded class="flex mx-auto" />
           </template>
@@ -222,6 +232,7 @@ const clickInviteMore = () => {
                     <div class="ml-1 mb-1 text-xs text-gray-500">{{ $t('datatype.Email') }}:</div>
 
                     <a-input
+                      :ref="emailField"
                       v-model:value="usersData.emails"
                       validate-trigger="onBlur"
                       :placeholder="$t('labels.email')"

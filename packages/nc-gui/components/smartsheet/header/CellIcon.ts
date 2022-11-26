@@ -19,7 +19,6 @@ import {
   isJSON,
   isPercent,
   isPhoneNumber,
-  isPrimary,
   isRating,
   isSet,
   isSingleSelect,
@@ -56,7 +55,7 @@ import SpecificDBTypeIcon from '~icons/mdi/database-settings'
 import DurationIcon from '~icons/mdi/timer-outline'
 
 const renderIcon = (column: ColumnType, abstractType: any) => {
-  if (isPrimary(column)) {
+  if (isPrimaryKey(column)) {
     return KeyIcon
   } else if (isJSON(column)) {
     return JSONIcon
@@ -68,7 +67,7 @@ const renderIcon = (column: ColumnType, abstractType: any) => {
     return MultiSelectIcon
   } else if (isSingleSelect(column)) {
     return SingleSelectIcon
-  } else if (isBoolean(column)) {
+  } else if (isBoolean(column, abstractType)) {
     return BooleanIcon
   } else if (isTextArea(column)) {
     return TextAreaIcon
