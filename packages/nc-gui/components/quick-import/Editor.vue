@@ -61,9 +61,15 @@ watch(views, async () => {
     </a-layout-sider>
     <a-layout-content>
       <div class="nc-container flex flex-col h-full mt-1.5 px-12">
-        <LazyQuickImportTabs />
-        <LazySmartsheetToolbar />
-        <LazySmartsheetGrid />
+        <div class="flex flex-col h-full flex-1 min-w-0">
+          <LazyQuickImportTabs />
+          <LazySmartsheetToolbar />
+          <div class="flex flex-1 min-h-0">
+            <div class="h-full flex-1 min-w-0 min-h-0 bg-gray-50">
+              <LazySmartsheetGrid />
+            </div>
+          </div>
+        </div>
       </div>
     </a-layout-content>
   </a-layout>

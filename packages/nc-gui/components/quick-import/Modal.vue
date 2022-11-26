@@ -363,7 +363,7 @@ provide(IsQuickImportInj, ref(true))
     v-model:visible="dialogShow"
     width="100%"
     wrap-class-name="nc-modal-quick-import nc-fullscreen-modal "
-    body-style="padding: 10px"
+    body-style="padding: 0px"
     @keydown.esc="dialogShow = false"
   >
     <template #title>
@@ -377,15 +377,9 @@ provide(IsQuickImportInj, ref(true))
       </a-row>
     </template>
     <a-spin :spinning="isParsingData" tip="Parsing Data ..." size="large">
-      <div class="px-5">
+      <div v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA" class="px-5 mt-3">
         <!-- Step 1: Upload Data -->
-        <a-tabs
-          v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA"
-          v-model:activeKey="activeKey"
-          hide-add
-          type="editable-card"
-          tab-position="top"
-        >
+        <a-tabs v-model:activeKey="activeKey" hide-add type="editable-card" tab-position="top">
           <a-tab-pane key="uploadTab" :closable="false">
             <template #tab>
               <!--              Upload -->
@@ -452,15 +446,14 @@ provide(IsQuickImportInj, ref(true))
           </a-tab-pane>
         </a-tabs>
 
-        <LazyQuickImportAdvancedSettings v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA" />
-
-        <!-- Step 2: Review Data -->
-        <LazyQuickImportEditor
-          v-if="importStepper === IMPORT_STEPS.STEP_2_REVIEW_DATA"
-          ref="templateEditorRef"
-          class="nc-quick-import-template-editor"
-        />
+        <LazyQuickImportAdvancedSettings />
       </div>
+      <!-- Step 2: Review Data -->
+      <LazyQuickImportEditor
+        v-if="importStepper === IMPORT_STEPS.STEP_2_REVIEW_DATA"
+        ref="templateEditorRef"
+        class="nc-quick-import-template-editor"
+      />
     </a-spin>
     <template #footer>
       <template v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA">
