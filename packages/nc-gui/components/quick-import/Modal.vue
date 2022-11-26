@@ -363,98 +363,103 @@ provide(IsQuickImportInj, ref(true))
     v-model:visible="dialogShow"
     width="100%"
     wrap-class-name="nc-modal-quick-import nc-fullscreen-modal "
+    body-style="padding: 10px"
     @keydown.esc="dialogShow = false"
   >
     <template #title>
-      {{ importMeta.header }}
+      <a-row type="flex">
+        <a-col flex="200px">
+          <div class="leading-[60px]">
+            {{ importMeta.header }}
+          </div>
+        </a-col>
+        <a-col flex="auto"><LazyQuickImportStepper /></a-col>
+      </a-row>
     </template>
     <a-spin :spinning="isParsingData" tip="Parsing Data ..." size="large">
       <div class="px-5">
-        <LazyQuickImportStepper />
-        <div class="mt-5">
-          <!-- Step 1: Upload Data -->
-          <a-tabs
-            v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA"
-            v-model:activeKey="activeKey"
-            hide-add
-            type="editable-card"
-            tab-position="top"
-          >
-            <a-tab-pane key="uploadTab" :closable="false">
-              <template #tab>
-                <!--              Upload -->
-                <div class="flex items-center gap-2">
-                  <MdiFileUploadOutline />
-                  {{ $t('general.upload') }}
-                </div>
-              </template>
-
-              <div class="py-6">
-                <a-upload-dragger
-                  v-model:fileList="importState.fileList"
-                  name="file"
-                  class="nc-input-import !scrollbar-thin-dull"
-                  list-type="picture"
-                  :accept="importMeta.acceptTypes"
-                  :max-count="isImportTypeCsv ? 5 : 1"
-                  :multiple="true"
-                  :custom-request="customReqCbk"
-                  :before-upload="beforeUpload"
-                  @change="handleChange"
-                  @reject="rejectDrop"
-                >
-                  <MdiFilePlusOutline size="large" />
-
-                  <!-- Click or drag file to this area to upload -->
-                  <p class="ant-upload-text">{{ $t('msg.info.import.clickOrDrag') }}</p>
-
-                  <p class="ant-upload-hint">
-                    {{ importMeta.uploadHint }}
-                  </p>
-                </a-upload-dragger>
+        <!-- Step 1: Upload Data -->
+        <a-tabs
+          v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA"
+          v-model:activeKey="activeKey"
+          hide-add
+          type="editable-card"
+          tab-position="top"
+        >
+          <a-tab-pane key="uploadTab" :closable="false">
+            <template #tab>
+              <!--              Upload -->
+              <div class="flex items-center gap-2">
+                <MdiFileUploadOutline />
+                {{ $t('general.upload') }}
               </div>
-            </a-tab-pane>
+            </template>
 
-            <a-tab-pane v-if="isImportTypeJson" key="jsonEditorTab" :closable="false">
-              <template #tab>
-                <span class="flex items-center gap-2">
-                  <MdiCodeJson />
-                  JSON Editor
-                </span>
-              </template>
+            <div class="py-6">
+              <a-upload-dragger
+                v-model:fileList="importState.fileList"
+                name="file"
+                class="nc-input-import !scrollbar-thin-dull"
+                list-type="picture"
+                :accept="importMeta.acceptTypes"
+                :max-count="isImportTypeCsv ? 5 : 1"
+                :multiple="true"
+                :custom-request="customReqCbk"
+                :before-upload="beforeUpload"
+                @change="handleChange"
+                @reject="rejectDrop"
+              >
+                <MdiFilePlusOutline size="large" />
 
-              <div class="pb-3 pt-3">
-                <LazyMonacoEditor ref="jsonEditorRef" v-model="importState.jsonEditor" class="min-h-60 max-h-80" />
-              </div>
-            </a-tab-pane>
+                <!-- Click or drag file to this area to upload -->
+                <p class="ant-upload-text">{{ $t('msg.info.import.clickOrDrag') }}</p>
 
-            <a-tab-pane v-else key="urlTab" :closable="false">
-              <template #tab>
-                <span class="flex items-center gap-2">
-                  <MdiLinkVariant />
-                  URL
-                </span>
-              </template>
+                <p class="ant-upload-hint">
+                  {{ importMeta.uploadHint }}
+                </p>
+              </a-upload-dragger>
+            </div>
+          </a-tab-pane>
 
-              <div class="pr-10 pt-5">
-                <a-form :model="importState" name="quick-import-url-form" layout="horizontal" class="mb-0">
-                  <a-form-item :label="importMeta.urlInputLabel" v-bind="validateInfos.url">
-                    <a-input v-model:value="importState.url" size="large" />
-                  </a-form-item>
-                </a-form>
-              </div>
-            </a-tab-pane>
-          </a-tabs>
+          <a-tab-pane v-if="isImportTypeJson" key="jsonEditorTab" :closable="false">
+            <template #tab>
+              <span class="flex items-center gap-2">
+                <MdiCodeJson />
+                JSON Editor
+              </span>
+            </template>
 
-          <LazyQuickImportAdvancedSettings v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA" />
+            <div class="pb-3 pt-3">
+              <LazyMonacoEditor ref="jsonEditorRef" v-model="importState.jsonEditor" class="min-h-60 max-h-80" />
+            </div>
+          </a-tab-pane>
 
-          <!-- Step 2: Review Data -->
-          <LazyQuickImportEditor
-            v-if="importStepper === IMPORT_STEPS.STEP_2_REVIEW_DATA"
-            ref="templateEditorRef"
-            class="nc-quick-import-template-editor"
-          />
-        </div>
+          <a-tab-pane v-else key="urlTab" :closable="false">
+            <template #tab>
+              <span class="flex items-center gap-2">
+                <MdiLinkVariant />
+                URL
+              </span>
+            </template>
+
+            <div class="pr-10 pt-5">
+              <a-form :model="importState" name="quick-import-url-form" layout="horizontal" class="mb-0">
+                <a-form-item :label="importMeta.urlInputLabel" v-bind="validateInfos.url">
+                  <a-input v-model:value="importState.url" size="large" />
+                </a-form-item>
+              </a-form>
+            </div>
+          </a-tab-pane>
+        </a-tabs>
+
+        <LazyQuickImportAdvancedSettings v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA" />
+
+        <!-- Step 2: Review Data -->
+        <LazyQuickImportEditor
+          v-if="importStepper === IMPORT_STEPS.STEP_2_REVIEW_DATA"
+          ref="templateEditorRef"
+          class="nc-quick-import-template-editor"
+        />
       </div>
     </a-spin>
     <template #footer>
