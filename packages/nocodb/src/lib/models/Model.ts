@@ -40,6 +40,7 @@ export default class Model implements TableType {
   tags: string;
   type: ModelTypes;
   updated_at: Date | number | string;
+  meta?: string | object;
 
   table_name: string;
   title: string;
@@ -119,6 +120,7 @@ export default class Model implements TableType {
         created_at: model.created_at,
         updated_at: model.updated_at,
         id: model.id,
+        meta: model.meta,
       }
     );
 
