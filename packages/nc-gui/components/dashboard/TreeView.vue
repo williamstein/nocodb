@@ -58,14 +58,20 @@ const tablesById = $computed(() =>
 
 const filteredTables = $computed(() => {
   return tables.value?.filter((table) => {
-    if (isQuickImport.value) {
-      // only include NC_IMPORT_TABLE
-      return table.title.includes('NcImportTable')
+    let isImportTable = false
+    if (table?.meta) {
+      const o = typeof table.meta === 'string' ? JSON.parse(table.meta) : table.meta
+      if (o?.IMPORT_STATUS === 'IN_PROGRESS') {
+        isImportTable = true
+      }
     }
-    // filter with query + exclude NC_IMPORT_TABLE
-    return (
-      (!filterQuery || table.title.toLowerCase().includes(filterQuery.toLowerCase())) && !table.title.includes('NcImportTable')
-    )
+
+    if (isQuickImport.value) {
+      // only include imported tables
+      return isImportTable
+    }
+    // filter with query + exclude imported tables
+    return (!filterQuery || table.title.toLowerCase().includes(filterQuery.toLowerCase())) && !isImportTable
   })
 })
 
