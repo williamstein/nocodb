@@ -93,6 +93,7 @@ const [useProvideQuickImportStore, useQuickImportStore] = useInjectionState(
       // leave title empty to get a generated one based on table_name
       table.title = ''
       table.table_name = t.table_name
+      table.meta = { IMPORT_STATUS: 'IN_PROGRESS' }
       table.columns = [
         'id',
         'created_at',

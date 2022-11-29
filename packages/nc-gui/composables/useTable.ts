@@ -17,10 +17,11 @@ import {
 import { TabType } from '~/lib'
 
 export function useTable(onTableCreate?: (tableMeta: TableType) => void) {
-  const table = reactive<{ title: string; table_name: string; columns: string[] }>({
+  const table = reactive<{ title: string; table_name: string; columns: string[]; meta?: Record<string, any> }>({
     title: '',
     table_name: '',
     columns: SYSTEM_COLUMNS,
+    meta: {},
   })
 
   const { t } = useI18n()
