@@ -7151,6 +7151,12 @@
               "boolean",
               "number"
             ]
+          },
+          "meta": {
+            "type": [
+              "string",
+              "object"
+            ]
           }
         },
         "required": [
@@ -7490,6 +7496,12 @@
             "items": {
               "$ref": "#/components/schemas/Column"
             }
+          },
+          "meta": {
+            "type": [
+              "string",
+              "object"
+            ]
           }
         },
         "required": [

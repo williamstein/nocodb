@@ -123,6 +123,7 @@ export interface TableType {
   slug?: string;
   project_id?: string;
   mm?: boolean | number;
+  meta?: string | object;
 }
 
 export interface ViewType {
@@ -174,6 +175,7 @@ export interface TableReqType {
   order?: number;
   mm?: boolean;
   columns: ColumnType[];
+  meta?: string | object;
 }
 
 export interface TableListType {
