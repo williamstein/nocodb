@@ -67,9 +67,7 @@ export default class CSVTemplateAdapter {
     return new Promise((resolve, reject) => {
       const that = this
       let steppers = 0
-      const tn = `NC_IMPORT_TABLE_${(
-        (this.config.importFromURL ? (source as string).split('/').pop() : (source as UploadFile).name) as string
-      )
+      const tn = `${((this.config.importFromURL ? (source as string).split('/').pop() : (source as UploadFile).name) as string)
         .replace(/[` ~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/g, '_')
         .trim()!}`
 
