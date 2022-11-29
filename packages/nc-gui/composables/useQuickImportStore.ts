@@ -11,17 +11,13 @@ const [useProvideQuickImportStore, useQuickImportStore] = useInjectionState(
     }
     const { project } = useProject()
 
-    const { t } = useI18n()
+    const { $api } = useNuxtApp()
 
-    const { $e, $api } = useNuxtApp()
-
-    const { metas, getMeta } = useMetas()
+    const { getMeta } = useMetas()
 
     const quickImportTabs = ref<TabItem[]>([])
 
     const activeTabIndex = ref<number>(0)
-
-    const previousActiveTabIndex = ref(-1)
 
     const activeQuickImportTab = computed(() => quickImportTabs.value?.[activeTabIndex.value])
 
@@ -56,7 +52,6 @@ const [useProvideQuickImportStore, useQuickImportStore] = useInjectionState(
       const tab = typeof key === 'number' ? quickImportTabs.value[key] : quickImportTabs.value.find(getPredicate(key))
 
       if (tab) {
-        const isActive = quickImportTabs.value.indexOf(tab) === previousActiveTabIndex.value
         Object.assign(tab, newTabItemProps)
       }
     }
@@ -80,7 +75,7 @@ const [useProvideQuickImportStore, useQuickImportStore] = useInjectionState(
     const { table, createTable } = useTable(async (t) => {
       tnMappings.value[table.table_name] = t.title
       await addQuickImportTab({ title: t.title, id: t.id, type: t.type as TabType })
-      await getMeta(activeQuickImportTab.value?.id!)
+      await getMeta(activeQuickImportTab.value.id!)
     })
 
     const isImportTypeJson = computed(() => importType === 'json')

@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import type { TableType } from 'nocodb-sdk'
-import { ActiveViewInj, computed, ref, toRefs, useI18n, useNuxtApp, useProject } from '#imports'
-import type { TabItem } from '~/lib'
+import { ActiveViewInj, computed, ref } from '#imports'
 
-const { t } = useI18n()
-
-const { $api } = useNuxtApp()
-
-const { sqlUi, project } = useProject()
-
-const { activeQuickImportTab, quickImportTabs, activeTabIndex, closeQuickImportTab } = useQuickImportStoreOrThrow()!
+const { activeQuickImportTab } = useQuickImportStoreOrThrow()!
 
 const { metas, getMeta } = useMetas()
 
 const meta = computed<TableType | undefined>(() => activeQuickImportTab.value && metas.value[activeQuickImportTab.value.id!])
 
-const { views, isLoading } = useViews(meta)
+const { views } = useViews(meta)
 
 const activeView = ref()
 
@@ -43,7 +36,7 @@ const { loadData } = useViewData(meta, activeView)
 
 watch(activeQuickImportTab, async () => {
   // include the quick import table in metas
-  await getMeta(activeQuickImportTab.value?.id!)
+  await getMeta(activeQuickImportTab.value.id!)
 })
 
 watch(views, async () => {
