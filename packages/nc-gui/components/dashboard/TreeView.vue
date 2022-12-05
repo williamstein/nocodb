@@ -7,8 +7,8 @@ import type { VNodeRef } from '#imports'
 import {
   ClientType,
   Empty,
-  TabType,
   IsQuickImportInj,
+  TabType,
   computed,
   isDrawerOrModalExist,
   isMac,
@@ -81,7 +81,9 @@ const filteredTables = $computed(() => {
       return isImportTable
     }
     // filter with query + exclude imported tables
-    return (!searchActive.value || !filterQuery || table.title.toLowerCase().includes(filterQuery.toLowerCase())) && !isImportTable
+    return (
+      (!searchActive.value || !filterQuery || table.title.toLowerCase().includes(filterQuery.toLowerCase())) && !isImportTable
+    )
   })
 })
 
@@ -438,7 +440,7 @@ watch(
 
         <div v-if="bases[0] && bases[0].enabled && !bases.slice(1).filter((el) => el.enabled)?.length" class="flex-1">
           <div
-            v-if="(isUIAllowed('table-create')  && !isQuickImport)"
+            v-if="isUIAllowed('table-create') && !isQuickImport"
             class="group flex items-center gap-2 pl-8 pr-3 py-2 text-primary/70 hover:(text-primary/100) cursor-pointer select-none"
             @click="openTableCreateDialog(bases[0].id)"
           >
@@ -946,24 +948,25 @@ watch(
     <div v-if="!isQuickImport" class="flex items-start flex-col justify-start px-2 py-3 gap-2">
       <a-divider class="!my-0" />
 
-    <div class="flex items-start flex-col justify-start px-2 py-3 gap-2">
-      <LazyGeneralAddBaseButton
-        class="color-transition py-1.5 px-2 text-primary font-bold cursor-pointer select-none hover:text-accent"
-      />
+      <div class="flex items-start flex-col justify-start px-2 py-3 gap-2">
+        <LazyGeneralAddBaseButton
+          class="color-transition py-1.5 px-2 text-primary font-bold cursor-pointer select-none hover:text-accent"
+        />
 
-      <LazyGeneralHelpAndSupport class="color-transition px-2 text-gray-500 cursor-pointer select-none hover:text-accent" />
+        <LazyGeneralHelpAndSupport class="color-transition px-2 text-gray-500 cursor-pointer select-none hover:text-accent" />
 
-      <GeneralJoinCloud class="color-transition px-2 text-gray-500 cursor-pointer select-none hover:text-accent" />
+        <GeneralJoinCloud class="color-transition px-2 text-gray-500 cursor-pointer select-none hover:text-accent" />
 
-      <GithubButton
-        class="ml-2 py-1"
-        href="https://github.com/nocodb/nocodb"
-        data-icon="octicon-star"
-        data-show-count="true"
-        data-size="large"
-      >
-        Star
-      </GithubButton>
+        <GithubButton
+          class="ml-2 py-1"
+          href="https://github.com/nocodb/nocodb"
+          data-icon="octicon-star"
+          data-show-count="true"
+          data-size="large"
+        >
+          Star
+        </GithubButton>
+      </div>
     </div>
   </div>
 </template>
