@@ -30,13 +30,14 @@ interface Props {
   modelValue: boolean
   importType: 'csv' | 'json' | 'excel'
   importDataOnly?: boolean
+  baseId: string
 }
 
-const { importType, importDataOnly = false, ...rest } = defineProps<Props>()
+const { importType, importDataOnly = false, baseId, ...rest } = defineProps<Props>()
 
 const emit = defineEmits(['update:modelValue'])
 
-useProvideQuickImportStore(importType, importDataOnly)
+useProvideQuickImportStore(importType, importDataOnly, baseId)
 
 const { source, parserConfig, isImportTypeJson, isImportTypeCsv, IsImportTypeExcel, createTempTable, importTempTable } =
   useQuickImportStoreOrThrow()!

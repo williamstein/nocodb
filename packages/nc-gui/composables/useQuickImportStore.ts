@@ -3,7 +3,7 @@ import { useInjectionState } from '#imports'
 import type { TabItem, TabType } from '~/lib'
 
 const [useProvideQuickImportStore, useQuickImportStore] = useInjectionState(
-  (importType: 'csv' | 'json' | 'excel', importDataOnly = false) => {
+  (importType: 'csv' | 'json' | 'excel', importDataOnly = false, baseId: string) => {
     enum IMPORT_STEPS {
       STEP_1_UPLOAD_DATA = 0,
       STEP_2_REVIEW_DATA = 1,
@@ -76,7 +76,7 @@ const [useProvideQuickImportStore, useQuickImportStore] = useInjectionState(
       tnMappings.value[table.table_name] = t.title
       await addQuickImportTab({ title: t.title, id: t.id, type: t.type as TabType })
       await getMeta(activeQuickImportTab.value.id!)
-    })
+    }, baseId)
 
     const isImportTypeJson = computed(() => importType === 'json')
 
