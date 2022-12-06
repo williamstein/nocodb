@@ -444,6 +444,16 @@
       "stackedBy": "Stacked By",
       "chooseGroupingField": "Choose a Grouping Field",
       "addOrEditStack": "Add / Edit Stack"
+    },
+    "import":  {
+      "loadToDataBase": {
+        "append": "Append",
+        "merge": "Merge",
+        "overwrite": "Overwrite",
+        "appendDesc": "The data will be appended to the end of the target table.",
+        "mergeDesc": "The data will be merged with the existing data in the target table.",
+        "overwriteDesc": "The existing data will be overwritten with the new data."
+      }
     }
   },
   "tooltip": {
