@@ -34,9 +34,13 @@ useProvideSmartsheetStore(activeView, meta)
 
 const { loadData } = useViewData(meta, activeView)
 
-watch(activeQuickImportTab, async () => {
-  // include the quick import table in metas
-  await getMeta(activeQuickImportTab.value.id!)
+watch(activeQuickImportTab, async (v) => {
+  if (v) {
+    // v === null: removing tab
+    // else : adding a tab
+    // include the quick import table in metas
+    await getMeta(v.id!)
+  }
 })
 
 watch(views, async () => {
