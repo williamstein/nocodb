@@ -445,7 +445,7 @@
       "chooseGroupingField": "Choose a Grouping Field",
       "addOrEditStack": "Add / Edit Stack"
     },
-    "import":  {
+    "quickImport":  {
       "loadToDataBase": {
         "append": "Append",
         "merge": "Merge",
