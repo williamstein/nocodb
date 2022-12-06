@@ -198,9 +198,12 @@ async function parseAndExtractData() {
     else {
       // ensure the target table name not exist in current table list
       templateData.value.tables = templateData.value.tables.map((table: Record<string, any>) => {
-        const uniqueTn = populateUniqueTableName(table.table_name)
+        const prevTn = table.table_name
+        const uniqueTn = populateUniqueTableName(prevTn)
         // rename key in data
-        delete Object.assign(data, { [uniqueTn]: data[table.table_name] })[table.table_name]
+        if (uniqueTn != prevTn) {
+          delete Object.assign(data, { [uniqueTn]: data[prevTn] })[prevTn]
+        }
         return {
           ...table,
           table_name: uniqueTn,
