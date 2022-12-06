@@ -201,7 +201,7 @@ async function parseAndExtractData() {
         const prevTn = table.table_name
         const uniqueTn = populateUniqueTableName(prevTn)
         // rename key in data
-        if (uniqueTn != prevTn) {
+        if (uniqueTn !== prevTn) {
           delete Object.assign(data, { [uniqueTn]: data[prevTn] })[prevTn]
         }
         return {
