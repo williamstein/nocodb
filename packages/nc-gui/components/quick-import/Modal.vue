@@ -458,6 +458,9 @@ provide(IsQuickImportInj, ref(true))
         ref="templateEditorRef"
         class="nc-quick-import-template-editor"
       />
+
+      <!-- Step 3: Load to Database -->
+      <LazyQuickImportLoadToDatabase v-if="importStepper === IMPORT_STEPS.STEP_3_LOAD_TO_DATABASE" class="p-[20px]" />
     </a-spin>
     <template #footer>
       <template v-if="importStepper === IMPORT_STEPS.STEP_1_UPLOAD_DATA">
