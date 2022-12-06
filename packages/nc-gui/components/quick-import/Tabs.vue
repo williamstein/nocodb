@@ -14,7 +14,7 @@ function onEdit(targetKey: number, action: 'add' | 'remove' | string) {
   <div class="h-full w-full nc-container">
     <div class="h-full w-full flex flex-col">
       <div class="flex items-end !min-h-[var(--header-height)] nc-tab-bar">
-        <a-tabs v-model:activeKey="activeTabIndex" class="nc-root-tabs" type="editable-card" @edit="onEdit">
+        <a-tabs v-model:activeKey="activeTabIndex" class="nc-root-tabs" type="editable-card" :hide-add="true" @edit="onEdit">
           <a-tab-pane v-for="(tab, i) of quickImportTabs" :key="i">
             <template #tab>
               <div class="flex items-center gap-2 max-w-[110px]">
